@@ -1,0 +1,154 @@
+<ol class="breadcrumb">
+    <li><a href="#!">Home</a></li>
+    <li><a href="#!clientes">Clientes</a></li>
+    <li class="active">{{Title}}</li>
+</ol>
+
+<div class="xs">
+    <h3>{{Title}}</h3>
+
+    <div class="panel-body">
+        <form role="form" class="form-horizontal" id="form-client" onsubmit="saveClient();return false;">
+            <div class="form-group">
+                <label class="col-md-2 control-label">Nombres : </label>
+                <div class="col-md-8">
+                    <div class="input-group">							
+                        <span class="input-group-addon">
+                            <i class="fa fa-user"></i>
+                        </span>
+                        <input required="required" type="text" name="name" class="form-control1" placeholder="Nombres">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Apellidos : </label>
+                <div class="col-md-8">
+                    <div class="input-group input-icon right">
+                        <span class="input-group-addon">
+                            <i class="fa fa-user"></i>
+                        </span>
+                        <input required="required" name="last_name" class="form-control1" type="text" placeholder="Apellidos">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="selector1" class="col-sm-2 control-label">Tipo Documento : </label>
+                <div class="col-sm-8">
+                    <select required="required" name="type_document" id="Tipo_Docs" class="form-control1">
+                        <option value="0">Cédula de Ciudadania</option>
+                        <option value="1">NIT</option>
+                        <option value="2">Cédula de Extranjeria</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label"># Documento : </label>
+                <div class="col-md-8">
+                    <div class="input-group input-icon right">
+                        <span class="input-group-addon">
+                            <i class="fa fa-passport"></i>
+                        </span>
+                        <input required="required" name="document" class="form-control1" type="number" min="0" placeholder="Número documento">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"> Email : </label>
+                <div class="col-md-8">
+                    <div class="input-group input-icon right">
+                        <span class="input-group-addon">
+                            <i class="fa fa-envelope-o"></i>
+                        </span>
+                        <input required="required" name="email" class="form-control1" type="email" placeholder="Email cliente">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"> Ciudad : </label>
+                <div class="col-md-8">
+                    <div class="input-group input-icon right">
+                        <span class="input-group-addon">
+                            <i class="fa fa-globe"></i>
+                        </span>
+                        <select name="city" class="form-control1">
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"> Direccion : </label>
+                <div class="col-md-8">
+                    <div class="input-group input-icon right">
+                        <span class="input-group-addon">
+                            <i class="fa fa-map-marker"></i>
+                        </span>
+                        <input required="required" name="address" class="form-control1" type="text" placeholder="Dirección">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Celular : </label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-mobile-phone"></i>
+                        </span>
+                        <input required="required" type="number" name="movile" class="form-control1" placeholder="Celular">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">Teléfono : </label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-phone"></i>
+                        </span>
+                        <input  type="number"  name="phone" class="form-control1" placeholder="Teléfono">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-warning btn-warng1"><i class="fa fa-save"></i>&nbsp;&nbsp; Guardar</button>
+                <a href="#!clientes" class="btn btn-success btn-warng1"><i class="fa fa-ban"></i>&nbsp;&nbsp;Cancelar</a>
+            </div>
+            <input type="hidden" name="id" value="0">
+        </form>
+    </div>
+
+</div>
+
+<script>
+    function Cities(callback) {
+        ajax(`${API_HOST}clientes/cities`, "GET", {}, function (json) {
+            if (json) {
+                for (var item in json) {
+                    $("select[name='city']").append(`<option value='${json[item]['id']}'>${json[item]['city']}</option>`)
+                }
+                if(callback)
+                    callback()
+            }
+        });
+
+    }
+    function saveClient() {
+        var formdata = $("#form-client").serializeArray()
+        var data = {};
+        $.each(formdata, function (i, val) {
+            data[val.name] = val.value;
+        })
+        ajax(`${API_HOST}clientes/save`, "POST", data, function (json) {
+            if (json.status == true) {
+                location.hash = "!clientes";
+            } else {
+                alert("El cliente no pudo ser creado.")
+            }
+        }, function () {
+            alert("El cliente no pudo ser creado.")
+        });
+    }
+
+</script>
